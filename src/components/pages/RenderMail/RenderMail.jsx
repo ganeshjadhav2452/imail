@@ -9,26 +9,36 @@ import signOfRed from "../../../assets/signOfRead.png";
 import signOfNotRed from "../../../assets/signOfNotRead.png";
 import binIcon from "../../../assets/dustbin.png";
 import { Link } from "react-router-dom";
-import { deleteEmail } from "../../../app/slices/fetchEmailsSlice";
-function RenderMail() {
+import { deleteEmail,getSentEmails } from "../../../app/slices/fetchEmailsSlice";
+
+function RenderMail({render}) {
+  console.log(render)
   const dispatch = useDispatch();
-  let { receivedEmails } = useSelector((state) => state.fetchedData);
+  let { receivedEmails,sentEmails } = useSelector((state) => state.fetchedData);
   const [isHovered, setIsHovered] = useState(false);
-  let serverId = ''
+
+console.log(sentEmails)
   let count = 1;
+
   if (receivedEmails === null) {
     receivedEmails = {};
   }
+  if (sentEmails === null) {
+    sentEmails = {};
+  }
 
-  const deleteClickHandler = (e) => {
-    console.log(e)
-    // dispatch(deleteEmail(serverId))
-  };
+
   useEffect(() => {
-    setInterval(() => {
-      dispatch(fetchInboxEmails());
-    }, 2000);
-  }, []);
+    if(render ==='inbox'){
+      setInterval(() => {
+        dispatch(fetchInboxEmails());
+      }, 2000);
+    }
+   
+   if(render === 'sent'){
+    dispatch(getSentEmails());
+   }
+  }, [render]);
   return (
     <main>
       <section className="glass">
@@ -38,9 +48,9 @@ function RenderMail() {
             style={{ marginTop: "-40px", marginBottom: " 10px" }}
           ></div>
           <div className="cards">
-            {Object.keys(receivedEmails).map((serverId) => {
-              const mail = receivedEmails[serverId];
-              serverId = serverId
+            {Object.keys(render === 'inbox'? receivedEmails:sentEmails).map((serverId) => {
+              const mail = render === 'inbox' ? receivedEmails[serverId]: sentEmails[serverId];
+           
               return (
                 <div key={serverId}
                 onMouseEnter={()=>setIsHovered(true)}
@@ -50,22 +60,23 @@ function RenderMail() {
                 >
                   <Link
                     style={{ textDecoration: "none" }}
-                    to={`/viewemail/${serverId}`}
+                    to={`/viewemail/${serverId}/${render}`}
                   >
                     <div className="card-info">
                       <p>{count++}</p>
-                      <h4>{mail.senderName}</h4>
+                      <h4>{render === 'inbox' ? mail.senderName: mail.receiverMail}</h4>
                       <p>{mail.subject}</p>
 
-                      <img
+                   { render === 'inbox'?  <img
                         style={{ height: "2rem" }}
                         src={mail.isRead === false ? signOfNotRed : signOfRed}
                         id="valorant"
                       />
+                      :null}
                     </div>
                   </Link>
                { isHovered &&  <button
-                    onClick={ ()=> dispatch(deleteEmail(serverId))}
+                    onClick={ ()=> dispatch(deleteEmail(serverId,render))}
                     className="deleteBtn"
                     style={{ height: "2rem", border: "none" ,background:'inherit'}}
                   >

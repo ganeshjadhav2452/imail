@@ -60,13 +60,14 @@ export const postEmail = (mailBody) => {
   };
 };
 
-export const getSentEmails = ({ mailBody }) => {
+export const getSentEmails = () => {
   return async (dispatch, getState) => {
     try {
       const sentResponse = await axios.get(
         `https://imail-b07c6-default-rtdb.firebaseio.com/emails/${email}/sent.json`
       );
-      console.log(sentResponse);
+     
+      dispatch(updateSentEmails(sentResponse.data))
     } catch (error) {
       console.log(error);
     }
@@ -103,14 +104,16 @@ export const updateIsReadToTrue = (id,obj) => {
   };
 };
 
-export const deleteEmail = (id) => {
+export const deleteEmail = (id,render) => {
+  let endpoint = render === 'inbox'?'receive':'sent'
   return async (dispatch, getState) => {
     try {
       const deleteResponse = await axios.delete(
-        `https://imail-b07c6-default-rtdb.firebaseio.com/emails/${email}/receive/${id}.json`);
+        `https://imail-b07c6-default-rtdb.firebaseio.com/emails/${email}/${endpoint}/${id}.json`);
 
       
       dispatch(fetchInboxEmails())
+      dispatch(getSentEmails())
     } catch (error) {
         console.log(error)
     }

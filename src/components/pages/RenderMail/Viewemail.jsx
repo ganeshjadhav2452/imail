@@ -4,14 +4,14 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { updateIsReadToTrue } from "../../../app/slices/fetchEmailsSlice";
 const Viewemail = () => {
-    const {id} = useParams()
+    const {id,render} = useParams()
     const {singleObj} = useSelector((state)=>state.fetchedData) 
     const dispatch = useDispatch()
 
     console.log(singleObj.isRead)
    useEffect(()=>{
     console.log(id)
-    if(!singleObj.isRead){
+    if(!singleObj.isRead && render === 'inbox'){
 
         dispatch(updateIsReadToTrue(id,singleObj))
     }
@@ -26,8 +26,8 @@ const Viewemail = () => {
           ></div>
           <div className="cards">
             <div >
-              <h4>{singleObj.senderName}</h4>
-              <b>{singleObj.senderEmail}</b>
+              <h4>{render === 'inbox' ? singleObj.senderName:singleObj.receiverMail}</h4>
+             {render === 'inbox' && <b>{singleObj.senderEmail}</b>}
             </div>
             <hr/>
             <p>subject:{singleObj.subject}</p>

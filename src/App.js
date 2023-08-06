@@ -10,10 +10,10 @@ const App = () => {
     <>
     <NavBar/>
     <Routes>
-      <Route exact path='/viewemail/:id' element={<Viewemail/>} />
+      <Route exact path='/viewemail/:id/:render' element={<Viewemail/>} />
       <Route exact path='/auth' element={<AuthPage/>} />
-      <Route exact path='/' element={<RenderMail/>} />
-      <Route exact path='/sent' element={<RenderMail/>} />
+      <Route exact path='/' element={<RenderMail render={'inbox'}/>} />
+      <Route exact path='/sent' element={<RenderMail render={'sent'}/>} />
       <Route exact path='/composemail' element={<ComposeMailForm/>} />
     </Routes>
     </>
