@@ -1,47 +1,34 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState , useEffect} from "react";
 import "./ComponseMail.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertToRaw, EditorState } from "draft-js"; // Import EditorState and convertToRaw
 import axios from "axios";
-const email = localStorage.getItem('email').replace('@','').replace('.','')
+import { postEmail } from "../../../app/slices/fetchEmailsSlice";
+import { useDispatch } from 'react-redux'
+const email = localStorage.getItem('email')
 
 function ComposeMailForm() {
   const toMailRef = useRef();
+  const nameRef = useRef();
   const subjectMailRef = useRef();
   const [editorState, setEditorState] = useState(EditorState.createEmpty()); // Initialize editor state
-
+  const dispatch = useDispatch()
   const onEditorStateChange = (newEditorState) => {
     setEditorState(newEditorState);
   };
 
-  const sendMailHandler = async () => {
+  const sendMailHandler =  () => {
     const mailBody = {
       receiverMail: toMailRef.current.value,
       subject: subjectMailRef.current.value,
+      senderName: nameRef.current.value,
       body: convertToRaw(editorState.getCurrentContent()).blocks[0].text,
       isRead: false,
+      senderEmail:email
     };
-    console.log(mailBody);
-    try {
-      await axios(
-        `https://imail-b07c6-default-rtdb.firebaseio.com/emails/${email}/sent.json`,
-        {
-          method: "POST",
-          data: mailBody,
-        }
-      );
-
-      await axios(
-        `https://imail-b07c6-default-rtdb.firebaseio.com/emails/${email}/receive.json`,
-        {
-          method: "POST",
-          data: mailBody,
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(postEmail(mailBody));
+  
   };
 
   return (
@@ -58,6 +45,15 @@ function ComposeMailForm() {
               type="text"
               placeholder="to"
               ref={toMailRef}
+            />
+          </div>
+          <div className="form-field">
+            <label className="title">Sender's Name</label>
+            <input
+              className="field"
+              type="text"
+              placeholder="Sender's Name"
+              ref={nameRef}
             />
           </div>
           <div className="form-field -select">
