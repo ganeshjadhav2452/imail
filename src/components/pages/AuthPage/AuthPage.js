@@ -1,13 +1,15 @@
 import React, { useState, useRef,  useEffect } from "react";
 import "./AuthPage.css";
 import LoaderEl from "../../UI/Loader/Loader";
-// import { Navigate } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 
 // import { Link } from "react-router-dom";
 
 function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const confPassRef = useRef();
+  const navigate = useNavigate()
   const [isPassSame, setIsPassSame] = useState(true);
   const [isError, setIsError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +55,8 @@ function AuthPage() {
         setIsLoading(false);
         console.log(response)
         if (response.ok) {
-          
+          localStorage.setItem('token',response.idToken)
+          navigate('/')
         
         }else{
           setIsError('sorry ! something went wrong')

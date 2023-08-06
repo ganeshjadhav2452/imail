@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const email = localStorage.getItem("email").replace("@", "").replace(".", "");
+const email = localStorage.getItem("email")?.replace("@", "").replace(".", "");
 const fetchEmailsSlice = createSlice({
   name: "fetchEmails",
   initialState: {

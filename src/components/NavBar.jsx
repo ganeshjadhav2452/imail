@@ -1,7 +1,13 @@
 
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 function NavBar() {
+const navigate = useNavigate()
+  const logoutHandler =()=>{
+    localStorage.removeItem('email')
+    localStorage.removeItem('token')
+    navigate('/auth')
+  }
   return (
 <nav className="navbar navbar-expand-lg bg-body-tertiary">
   <div className="container-fluid">
@@ -27,7 +33,7 @@ function NavBar() {
           <ul class="dropdown-menu">
             <li><Link class="dropdown-item" to="auth">Login</Link></li>
             <li><Link class="dropdown-item" to="auth">signUp </Link></li>
-            <li><button class="dropdown-item" >Logout </button></li>
+            <li><button class="dropdown-item" onClick={logoutHandler}>Logout </button></li>
           </ul>
         </li>
       </ul>
