@@ -96,9 +96,24 @@ export const updateIsReadToTrue = (id,obj) => {
       );
 
       
-      dispatch(updateSingleObj({...obj,isRead:true}))
+      dispatch(fetchInboxEmails())
     } catch (error) {
         console.log(error)
     }
   };
 };
+
+export const deleteEmail = (id) => {
+  return async (dispatch, getState) => {
+    try {
+      const deleteResponse = await axios.delete(
+        `https://imail-b07c6-default-rtdb.firebaseio.com/emails/${email}/receive/${id}.json`);
+
+      
+      dispatch(fetchInboxEmails())
+    } catch (error) {
+        console.log(error)
+    }
+  };
+};
+

@@ -10,6 +10,7 @@ const Viewemail = () => {
 
     console.log(singleObj.isRead)
    useEffect(()=>{
+    console.log(id)
     if(!singleObj.isRead){
 
         dispatch(updateIsReadToTrue(id,singleObj))

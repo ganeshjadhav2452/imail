@@ -169,7 +169,8 @@
   .card {
    
     display: flex;
-    flex-direction: row;
+    
+    flex-direction: column;
     background: linear-gradient(
       to left top,
       rgba(255, 255, 255, 0.8),
@@ -221,13 +222,16 @@
     left: 60%;
   } */
   .card-info {
+    width: 90%;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
     text-align: center;
     margin-top: 0.5rem;
     /* justify-content: space-around; */
   }
-  
+
   .percentage {
     font-weight: bold;
     background: linear-gradient(to right top, #65dfc9, #6cdbeb);
